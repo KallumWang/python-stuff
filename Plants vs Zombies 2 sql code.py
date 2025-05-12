@@ -14,7 +14,7 @@ print("11 = Modern Day")
 print("12 = Player's House")
 DATABASE = 'PVZ2.db'
 
-def print_all_Plants():
+def print_all_Plants():  
     World = input("What world id: ")
     with sqlite3.connect(DATABASE) as db:
         cursor = db.cursor()
@@ -25,5 +25,5 @@ def print_all_Plants():
         for Plants in results:
             print(f"Plants: {Plants[0]} Sun_Cost: {Plants[2]}")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  
     print_all_Plants()
