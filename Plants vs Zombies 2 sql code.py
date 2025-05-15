@@ -1,5 +1,7 @@
-'''This is code for a Plant's vs Zombies 2 code by Kallum'''
+'''This is code for a Plant's vs Zombies 2 database by Kallum May 2025'''
+#Imports
 import sqlite3
+#Glossary
 print("1 = Ancient Egypt")
 print("2 = Pirate Seas")
 print("3 = Wild West")
@@ -12,8 +14,10 @@ print("9 = Jurassic Marsh")
 print("10 = Big Wave Beach")
 print("11 = Modern Day")
 print("12 = Player's House")
-DATABASE = 'PVZ2.db'
 
+#Constants and Variables
+DATABASE = 'PVZ2.db'
+#Asks the user what world id it is
 def print_all_Plants():  
     World = input("What world id: ")
     with sqlite3.connect(DATABASE) as db:
