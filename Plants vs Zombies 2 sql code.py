@@ -1,19 +1,35 @@
 '''This is code for a Plant's vs Zombies 2 database by Kallum May 2025'''
 #Imports
 import sqlite3
-#Glossary
-print("1 = Ancient Egypt")
-print("2 = Pirate Seas")
-print("3 = Wild West")
-print("4 = Frostbite Caves")
-print("5 = Lost City")
-print("6 = Far Future")
-print("7 = Dark Ages")
-print("8 = Neon Mixtape Tour")
-print("9 = Jurassic Marsh")
-print("10 = Big Wave Beach")
-print("11 = Modern Day")
-print("12 = Player's House")
+
+
+# Header
+def print_header(title):
+    print(f"\n{'=' * 10} {title} {'=' * 10}")
+
+# Allign with gaps
+def gap(value, width):
+    return str(value) if value else "N/A"
+
+# Glossary
+worlds = {
+    1: "Ancient Egypt",
+    2: "Pirate Seas",
+    3: "Wild West",
+    4: "Frostbite Caves",
+    5: "Lost City",
+    6: "Far Future",
+    7: "Dark Ages",
+    8: "Neon Mixtape Tour",
+    9: "Jurassic Marsh",
+    10: "Big Wave Beach",
+    11: "Modern Day",
+    12: "Player's House"
+}
+
+print("World ID Glossary:")
+for id, name in worlds.items():
+    print(f"{id} = {name}")
 
 #Constants and Variables
 DATABASE = 'PVZ2.db'
