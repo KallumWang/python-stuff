@@ -33,7 +33,7 @@ def print_all_Plants():
         results = cursor.fetchall()
         # Prints the data nicely
         for Plants in results:
-            print(f"Plants: {Plants[0]} Sun_Cost: {Plants[2]}")
+            print(f"Plants: {Plants[0]} and Sun_Cost: {Plants[2]}")
 
 if __name__ == "__main__":  
     print_all_Plants()
