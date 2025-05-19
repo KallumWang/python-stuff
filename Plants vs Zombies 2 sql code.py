@@ -47,29 +47,6 @@ def print_all_Plants():
             for plant in results:
                 print(f"Plant: {plant[0]}, Sun Cost: {plant[2]}")
 
-
-# Sorts plants by a chosen attribute
-def sort_by(attribute):
-    try:
-        with sqlite3.connect(DATABASE) as db:
-            cursor = db.cursor()
-            if attribute not in ['Plant_Name', 'Sun_Cost', 'World_Unlocked_ID']:
-                raise ValueError("Invalid attribute to sort by.")
-            sql = f"SELECT Plant_Name, Sun_Cost, World_Unlocked_ID FROM Plants ORDER BY {attribute} DESC;"
-            cursor.execute(sql)
-            results = cursor.fetchall()
-
-            print_header(f"Sorted by {attribute.replace('_', ' ').title()}")
-            print(f"{'Plant_Name':<25} {'Sun_Cost':<10} {'World_Unlocked_ID':<15}")
-            print("-" * 55)
-            for plant in results:
-                print(f"{gap(plant[0], 25)} {gap(plant[1], 10)} {gap(plant[2], 15)}")
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-    except ValueError as ve:
-        print(f"Value error: {ve}")
-        
-
 # Main entry point
 if __name__ == "__main__":  
     print_all_Plants()
