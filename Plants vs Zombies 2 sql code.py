@@ -23,15 +23,16 @@ for id, name in worlds.items():
 # Constants and Variables
 DATABASE = 'PVZ2.db'
 
-# Asks the user what world id it is
+# Asks the user what world id it is, keeps asking until a valid one is entered
 def print_all_Plants():  
-    try:
-        World = int(input("What world id: "))
-        if World not in worlds:
-            raise ValueError("Invalid world ID.")
-    except ValueError as e:
-        print(f"Error: {e}. Please enter a number between 1 and 12.")
-        return
+    while True:
+        try:
+            World = int(input("What world id: "))
+            if World not in worlds:
+                raise ValueError("Invalid world ID.")
+            break  # valid input, exit loop
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 12 corresponding to a world ID.")
 
     with sqlite3.connect(DATABASE) as db:
         cursor = db.cursor()
@@ -45,6 +46,7 @@ def print_all_Plants():
             print_header(f"Plants in {worlds[World]}")
             for plant in results:
                 print(f"Plant: {plant[0]}, Sun Cost: {plant[2]}")
+
 
 # Sorts plants by a chosen attribute
 def sort_by(attribute):
