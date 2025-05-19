@@ -32,7 +32,7 @@ def print_all_Plants():
                 raise ValueError("Invalid world ID.")
             break  # valid input, exit loop
         except ValueError:
-            print("Invalid input. Please enter a number between 1 and 12 corresponding to a world ID.")
+            print("Invalid input. Please enter a full real number no monkey business between 1 and 12 corresponding to a world ID.")
 
     with sqlite3.connect(DATABASE) as db:
         cursor = db.cursor()
@@ -68,6 +68,7 @@ def sort_by(attribute):
         print(f"Database error: {e}")
     except ValueError as ve:
         print(f"Value error: {ve}")
+        
 
 # Main entry point
 if __name__ == "__main__":  
