@@ -5,9 +5,9 @@ import sqlite3
 def print_header(title):
     print(f"\n{'=' * 10} {title} {'=' * 10}")
 
-# Allign with gaps
+# Align with gaps
 def gap(value, width):
-    return str(value) if value else "N/A"
+    return str(value).ljust(width) if value else "N/A".ljust(width)
 
 # Glossary
 worlds = {
@@ -25,15 +25,49 @@ DATABASE = 'PVZ2.db'
 
 # Asks the user what world id it is
 def print_all_Plants():  
-    World = input("What world id: ")
+    try:
+        World = int(input("What world id: "))
+        if World not in worlds:
+            raise ValueError("Invalid world ID.")
+    except ValueError as e:
+        print(f"Error: {e}. Please enter a number between 1 and 12.")
+        return
+
     with sqlite3.connect(DATABASE) as db:
         cursor = db.cursor()
         sql = "SELECT Plant_Name, World_Unlocked_ID, Sun_Cost FROM Plants WHERE World_Unlocked_ID = ?;"
         cursor.execute(sql, (World,))
         results = cursor.fetchall()
-        # Prints the data nicely
-        for Plants in results:
-            print(f"Plants: {Plants[0]} and Sun_Cost: {Plants[2]}")
 
+        if not results:
+            print("No plants found for that world.")
+        else:
+            print_header(f"Plants in {worlds[World]}")
+            for plant in results:
+                print(f"Plant: {plant[0]}, Sun Cost: {plant[2]}")
+
+# Sorts plants by a chosen attribute
+def sort_by(attribute):
+    try:
+        with sqlite3.connect(DATABASE) as db:
+            cursor = db.cursor()
+            if attribute not in ['Plant_Name', 'Sun_Cost', 'World_Unlocked_ID']:
+                raise ValueError("Invalid attribute to sort by.")
+            sql = f"SELECT Plant_Name, Sun_Cost, World_Unlocked_ID FROM Plants ORDER BY {attribute} DESC;"
+            cursor.execute(sql)
+            results = cursor.fetchall()
+
+            print_header(f"Sorted by {attribute.replace('_', ' ').title()}")
+            print(f"{'Plant_Name':<25} {'Sun_Cost':<10} {'World_Unlocked_ID':<15}")
+            print("-" * 55)
+            for plant in results:
+                print(f"{gap(plant[0], 25)} {gap(plant[1], 10)} {gap(plant[2], 15)}")
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+    except ValueError as ve:
+        print(f"Value error: {ve}")
+
+# Main entry point
 if __name__ == "__main__":  
     print_all_Plants()
+    # Example usage: sort_by('Sun_Cost')
