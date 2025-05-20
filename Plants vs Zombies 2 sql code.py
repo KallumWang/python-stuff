@@ -58,42 +58,61 @@ def get_all_plants_sorted_by_name():
         print(f"Database error: {e}")
         return []
 
-#Function which filters plants by world id
-def get_plants_by_world(world_id):
-    try:
-        with sqlite3.connect(DATABASE) as db:
-            cursor = db.cursor()
-            sql = "SELECT Plant_Name, Sun_Cost FROM Plants WHERE World_Unlocked_ID = ? ORDER BY Sun_Cost;"
-            cursor.execute(sql, (world_id,))
-            return cursor.fetchall()
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        return []
-    
-
-#function that asks what world id  Keys being sql keys like FK or PK map process the data by applying da functoin to each item of the iterable (list in this case)
-def print_all_plants():
-    print_world_glossary()
+def main_sorting_menu():
+    print_header("Plants vs Zombies 2 Database")
     while True:
-        try:
-            world_input = f"What world ID ({'/'.join(map(str, worlds.keys()))}): "
-            world = int(input(world_input))
-            if world not in worlds:
-                raise ValueError()
-            break
-        except ValueError:
-            print("Invalid input. Please enter a number between 1 and 12. No monkey business like decimals and stuff")
+        print("\nSort Plants By:")
+        print("1. View all plants sorted by Sun Cost")
+        print("2. View all plants sorted by Name")
+        print("3. View plants from a specific world sorted by Sun Cost")
+        print("4. View plants from a specific world sorted by Name")
+        print("5. Exit")
 
-#calls the function from earlier and prints the list of plants in the world and tells you if there is none in that world
-    plants = get_plants_by_world(world)
-    if not plants:
-        print("No plants found for that world.")
-    else:
-        print_header(f"Plants in {worlds[world]}")
-        print(f"{'Plant Name':<25} | {'Sun Cost':>8}")
-        print("-" * 36)
-        for name, cost in plants:
-            print(f"{name:<25} | {cost:>8}")
+        choice = input("Enter your choice (1-5): ")
+
+        if choice == '1':
+            plants = get_all_plants_sorted_by_suncost()
+            print_header("All Plants by Sun Cost")
+            print(f"{'Plant Name':<25} | {'Sun Cost':>8} | {'World':<20}")
+            print("-" * 60)
+            for name, cost, world_id in plants:
+                print(f"{name:<25} | {cost:>8} | {worlds.get(world_id, 'Unknown'):<20}")
+
+        elif choice == '2':
+            plants = get_all_plants_sorted_by_name()
+            print_header("All Plants by Name")
+            print(f"{'Plant Name':<25} | {'Sun Cost':>8} | {'World':<20}")
+            print("-" * 60)
+            for name, cost, world_id in plants:
+                print(f"{name:<25} | {cost:>8} | {worlds.get(world_id, 'Unknown'):<20}")
+
+        elif choice == '3' or choice == '4':
+            print_world_glossary()
+            try:
+                world_id = int(input("Enter World ID: "))
+                if world_id not in worlds:
+                    raise ValueError()
+            except ValueError:
+                print("Invalid World ID. Please enter a number from the glossary.")
+                continue
+
+            sort_by = 'Sun_Cost' if choice == '3' else 'Plant_Name'
+            plants = get_plants_by_world(world_id, sort_by)
+            if not plants:
+                print(f"No plants found in {worlds[world_id]}")
+            else:
+                print_header(f"{worlds[world_id]} Plants Sorted by {'Sun Cost' if sort_by == 'Sun_Cost' else 'Name'}")
+                print(f"{'Plant Name':<25} | {'Sun Cost':>8}")
+                print("-" * 36)
+                for name, cost in plants:
+                    print(f"{name:<25} | {cost:>8}")
+
+        elif choice == '5':
+            print("Exiting program")
+            break
+        else:
+            print("That's not a interger. Please select a number between 1 and 5. NO monkey business like decimals and stuff")
+
 
 if __name__ == "__main__":
-    print_all_plants()
+    main_sorting_menu()
