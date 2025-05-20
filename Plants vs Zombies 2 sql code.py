@@ -20,7 +20,7 @@ def get_plants_by_world(world_id):
     try:
         with sqlite3.connect(DATABASE) as db:
             cursor = db.cursor()
-            sql = "SELECT Plant_Name, Sun_Cost FROM Plants WHERE World_Unlocked_ID = ?;"
+            sql = "SELECT Plant_Name, Sun_Cost FROM Plants WHERE World_Unlocked_ID = ? ORDER BY Sun_Cost ASC;"
             cursor.execute(sql, (world_id,))
             return cursor.fetchall()
     except sqlite3.Error as e:
