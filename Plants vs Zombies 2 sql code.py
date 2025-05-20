@@ -27,7 +27,7 @@ def get_plants_by_world(world_id):
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return []
-#function that asks what world id 
+ #function that asks what world id  Keys being sql keys like FK or PK map process the data by applying da functoin to each item of the iterable (list in this case)
 def print_all_plants():
     print_world_glossary()
     while True:
@@ -38,7 +38,7 @@ def print_all_plants():
                 raise ValueError()
             break
         except ValueError:
-            print("Invalid input. Please enter a number between 1 and 12.")
+            print("Invalid input. Please enter a number between 1 and 12. No monkey business like decimals and stuff")
 #calls the function from earlier and prints the list of plants in the world and tells you if there is none in that world
     plants = get_plants_by_world(world)
     if not plants:
