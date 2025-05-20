@@ -11,11 +11,27 @@ worlds = {
 #function for printing the title
 def print_header(title):
     print(f"\n{'=' * 10} {title} {'=' * 10}")
+
+
 #function for printing the glossary
 def print_world_glossary():
     print("World ID Glossary:")
     for id, name in worlds.items():
         print(f"{id:2} = {name}")
+
+# Functions that filters by suncost so cheapest goes firts
+def get_plants_by_world_sorted_by_suncost(world_id):
+    try:
+        with sqlite3.connect(DATABASE) as db:
+            cursor = db.cursor()
+            sql = "SELECT Plant_Name, Sun_Cost FROM Plants WHERE World_Unlocked_ID = ? ORDER BY Sun_Cost ASC;"
+            cursor.execute(sql, (world_id,))
+            return cursor.fetchall()
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return []
+
+
 #Function which filters plants by world id
 def get_plants_by_world(world_id):
     try:
@@ -27,7 +43,9 @@ def get_plants_by_world(world_id):
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return []
- #function that asks what world id  Keys being sql keys like FK or PK map process the data by applying da functoin to each item of the iterable (list in this case)
+    
+
+#function that asks what world id  Keys being sql keys like FK or PK map process the data by applying da functoin to each item of the iterable (list in this case)
 def print_all_plants():
     print_world_glossary()
     while True:
@@ -39,6 +57,7 @@ def print_all_plants():
             break
         except ValueError:
             print("Invalid input. Please enter a number between 1 and 12. No monkey business like decimals and stuff")
+
 #calls the function from earlier and prints the list of plants in the world and tells you if there is none in that world
     plants = get_plants_by_world(world)
     if not plants:
