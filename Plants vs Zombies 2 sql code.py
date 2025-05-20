@@ -7,26 +7,27 @@ worlds = {
     1: "Ancient Egypt", 2: "Pirate Seas", 3: "Wild West", 4: "Frostbite Caves", 5: "Lost City", 6: "Far Future", 
     7: "Dark Ages", 8: "Neon Mixtape Tour", 9: "Jurassic Marsh", 10: "Big Wave Beach", 11: "Modern Day", 12: "Player's House"
 }
-
+#all of the functions 
+#function for printing the title
 def print_header(title):
     print(f"\n{'=' * 10} {title} {'=' * 10}")
-
+#function for printing the glossary
 def print_world_glossary():
     print("World ID Glossary:")
     for id, name in worlds.items():
         print(f"{id:2} = {name}")
-
+#Function which filters plants by world id
 def get_plants_by_world(world_id):
     try:
         with sqlite3.connect(DATABASE) as db:
             cursor = db.cursor()
-            sql = "SELECT Plant_Name, Sun_Cost FROM Plants WHERE World_Unlocked_ID = ? ORDER BY Sun_Cost ASC;"
+            sql = "SELECT Plant_Name, Sun_Cost FROM Plants WHERE World_Unlocked_ID = ? ORDER BY Sun_Cost;"
             cursor.execute(sql, (world_id,))
             return cursor.fetchall()
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return []
-
+#function that asks what world id 
 def print_all_plants():
     print_world_glossary()
     while True:
@@ -38,7 +39,7 @@ def print_all_plants():
             break
         except ValueError:
             print("Invalid input. Please enter a number between 1 and 12.")
-
+#calls the function from earlier and prints the list of plants in the world and tells you if there is none in that world
     plants = get_plants_by_world(world)
     if not plants:
         print("No plants found for that world.")
