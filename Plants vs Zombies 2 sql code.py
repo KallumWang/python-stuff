@@ -60,6 +60,9 @@ def get_all_plants_sorted_by_name():
 
 def main_sorting_menu():
     print_header("Plants vs Zombies 2 Database")
+    print("\nThis is a database for PvZ2 plants. Choose how you want to sort by:")
+
+    
     while True:
         print("\nSort Plants By:")
         print("1. View all plants sorted by Sun Cost")
