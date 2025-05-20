@@ -21,7 +21,7 @@ def print_world_glossary():
 
 
 #Functions to filter
-# Function that filters by suncost so cheapest goes firts
+# Function that filters by suncost so cheapest goes firts by world
 def get_plants_by_world(world_id, sort_by='Sun_Cost'):
     try:
         with sqlite3.connect(DATABASE) as db:
@@ -35,7 +35,7 @@ def get_plants_by_world(world_id, sort_by='Sun_Cost'):
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return []
-
+#Function to filter suncost for all plants
 def get_all_plants_sorted_by_suncost():
     try:
         with sqlite3.connect(DATABASE) as db:
@@ -46,7 +46,7 @@ def get_all_plants_sorted_by_suncost():
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return []
-
+#func that sorts all plants by name alphabetically
 def get_all_plants_sorted_by_name():
     try:
         with sqlite3.connect(DATABASE) as db:
@@ -57,12 +57,12 @@ def get_all_plants_sorted_by_name():
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return []
-
+#func that is the main sorting menu and asks for da stuff
 def main_sorting_menu():
     print_header("Plants vs Zombies 2 Database")
     print("\nThis is a database for PvZ2 plants. Choose how you want to sort by:")
 
-    
+
     while True:
         print("\nSort Plants By:")
         print("1. View all plants sorted by Sun Cost")
