@@ -188,7 +188,7 @@ def main_sorting_menu():
             print("Exiting program")
             break
         else:
-            print("That's not an integer. Please select a number between 1 and 5. NO monkey business like decimals and stuff.")
+            print("That's not a number from 1 - 5. Please select a number between 1 and 5. NO monkey business like decimals and stuff.")
 
 if __name__ == "__main__":
     main_sorting_menu()
