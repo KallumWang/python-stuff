@@ -4,7 +4,7 @@ import sqlite3
 # Constants
 DATABASE = 'PVZ2.db'
 worlds = {
-    1: "Ancient Egypt", 2: "Pirate Seas", 3: "Wild West", 4: "Frostbite Caves", 5: "Lost City", 6: "Far Future", 
+    1: "Ancient Egypt", 2: "Pirate Seas", 3: "Wild West", 4: "Frostbite Caves", 5: "Lost City", 6: "Far Future",
     7: "Dark Ages", 8: "Neon Mixtape Tour", 9: "Jurassic Marsh", 10: "Big Wave Beach", 11: "Modern Day", 12: "Player's House"
 }
 
@@ -58,21 +58,20 @@ def get_all_plants_sorted_by_name():
 RESET = "\033[0m"
 BOLD = "\033[1m"
 
-COLOUR_GOLD = "\033[38;5;220m"         # Gold (Ancient Egypt)
-COLOUR_DARK_BLUE = "\033[38;5;19m"     # Dark Blue (Pirate Seas)
-COLOUR_LIGHT_BROWN = "\033[38;5;180m"  # Light Brown (Wild West)
-COLOUR_PURPLE = "\033[38;5;93m"        # Purple (Far Future)
-COLOUR_GREY = "\033[38;5;244m"         # Grey (Dark Ages)
-COLOUR_LIGHT_BLUE = "\033[38;5;117m"   # Light Blue (Big Wave Beach)
-COLOUR_DEEP_GREEN = "\033[38;5;28m"    # Dark Green (Modern Day)
-COLOUR_LIGHT_GREEN = "\033[38;5;120m"  # Light Green (Player's House)
-
-COLOUR_CYAN = "\033[36m"    # Cyan (Frostbite Caves & Jurassic Marsh)
-COLOUR_MAGENTA = "\033[35m" # Magenta (Neon Mixtape Tour)
-COLOUR_RED = "\033[31m"     # Red (Exit option)
-COLOUR_YELLOW = "\033[33m"  # Yellow (Lost City)
-COLOUR_GREEN = "\033[32m"   # Green (menu options)
-COLOUR_WHITE = "\033[37m"   # White (fallback)
+COLOUR_GOLD = "\033[38;5;220m"
+COLOUR_DARK_BLUE = "\033[38;5;19m"
+COLOUR_LIGHT_BROWN = "\033[38;5;180m"
+COLOUR_PURPLE = "\033[38;5;93m"
+COLOUR_GREY = "\033[38;5;244m"
+COLOUR_LIGHT_BLUE = "\033[38;5;117m"
+COLOUR_DEEP_GREEN = "\033[38;5;28m"
+COLOUR_LIGHT_GREEN = "\033[38;5;120m"
+COLOUR_CYAN = "\033[36m"
+COLOUR_MAGENTA = "\033[35m"
+COLOUR_RED = "\033[31m"
+COLOUR_YELLOW = "\033[33m"
+COLOUR_GREEN = "\033[32m"
+COLOUR_WHITE = "\033[37m"
 
 world_colours = {
     1: COLOUR_GOLD,
@@ -93,10 +92,8 @@ def colour_text(text, colour):
     return f"{colour}{text}{RESET}"
 
 def pad_and_color(text, width, colour, align='left'):
-    # Truncate text if longer than width
     if len(text) > width:
-        text = text[:width-3] + '...'
-    # Align text accordingly
+        text = text[:width - 3] + '...'
     if align == 'left':
         padded = text.ljust(width)
     elif align == 'right':
@@ -105,7 +102,6 @@ def pad_and_color(text, width, colour, align='left'):
         padded = text.center(width)
     else:
         padded = text
-    # Apply color on padded text
     return colour_text(padded, colour)
 
 def main_sorting_menu():
@@ -124,7 +120,6 @@ def main_sorting_menu():
 
         if choice == '1':
             plants = get_all_plants_sorted_by_suncost()
-            # Header
             print_header(
                 f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
                 f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')} | "
@@ -140,7 +135,6 @@ def main_sorting_menu():
 
         elif choice == '2':
             plants = get_all_plants_sorted_by_name()
-            # Header
             print_header(
                 f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
                 f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')} | "
@@ -154,15 +148,23 @@ def main_sorting_menu():
                 world_name = pad_and_color(worlds.get(world_id, 'Unknown'), 20, colour)
                 print(f"{plant_name} | {cost_str} | {world_name}")
 
-        elif choice == '3' or choice == '4':
-            print_world_glossary()
-            try:
-                world_id = int(input("Enter World ID: "))
-                if world_id not in worlds:
-                    print("Invalid World ID. Please enter a number from the glossary.")
+        elif choice in ('3', '4'):
+            while True:
+                print_world_glossary()
+                user_input = input("Enter World ID (or 'b' to go back): ").strip()
+                if user_input.lower() == 'b':
+                    break
+                try:
+                    world_id = int(user_input)
+                    if world_id not in worlds:
+                        print("Invalid World ID. Please select a valid number from the glossary.")
+                        continue
+                    break
+                except ValueError:
+                    print("Invalid input. Please enter a valid whole number from the glossary.")
                     continue
-            except ValueError:
-                print("Invalid input. Please enter a valid number.")
+
+            if user_input.lower() == 'b':
                 continue
 
             sort_by = 'Sun_Cost' if choice == '3' else 'Plant_Name'
@@ -173,7 +175,6 @@ def main_sorting_menu():
                 print_header(
                     f"{colour_text(worlds[world_id] + ' Plants Sorted by ' + ('Sun Cost' if sort_by == 'Sun_Cost' else 'Name'), world_colours.get(world_id, COLOUR_WHITE))}"
                 )
-                # Header
                 print(
                     f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
                     f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')}"
