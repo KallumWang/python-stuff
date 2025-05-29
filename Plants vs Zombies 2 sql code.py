@@ -92,6 +92,22 @@ world_colours = {
 def colour_text(text, colour):
     return f"{colour}{text}{RESET}"
 
+def pad_and_color(text, width, colour, align='left'):
+    # Truncate text if longer than width
+    if len(text) > width:
+        text = text[:width-3] + '...'
+    # Align text accordingly
+    if align == 'left':
+        padded = text.ljust(width)
+    elif align == 'right':
+        padded = text.rjust(width)
+    elif align == 'center':
+        padded = text.center(width)
+    else:
+        padded = text
+    # Apply color on padded text
+    return colour_text(padded, colour)
+
 def main_sorting_menu():
     print_header("Plants vs Zombies 2 Database")
     print(f"\n{COLOUR_CYAN}This is a database for PvZ2 plants. Choose how you want to sort by:{RESET}")
@@ -108,34 +124,34 @@ def main_sorting_menu():
 
         if choice == '1':
             plants = get_all_plants_sorted_by_suncost()
-            # Header with Plant Name in Player's House colour and Sun Cost in Gold
+            # Header
             print_header(
-                f"{colour_text('Plant Name'.ljust(25), world_colours[12])} | "
-                f"{colour_text('Sun Cost'.center(9), COLOUR_GOLD)} | "
-                f"{colour_text('World'.ljust(20), COLOUR_GOLD)}"
+                f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
+                f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')} | "
+                f"{pad_and_color('World', 20, COLOUR_GOLD)}"
             )
             print("-" * 60)
             for name, cost, world_id in plants:
                 colour = world_colours.get(world_id, COLOUR_WHITE)
-                plant_name = colour_text(name.ljust(25), colour)
-                cost_str = colour_text(str(cost).center(9), COLOUR_GOLD)
-                world_name = colour_text(worlds.get(world_id, 'Unknown').ljust(20), colour)
+                plant_name = pad_and_color(name, 25, colour)
+                cost_str = pad_and_color(str(cost), 9, COLOUR_GOLD, 'center')
+                world_name = pad_and_color(worlds.get(world_id, 'Unknown'), 20, colour)
                 print(f"{plant_name} | {cost_str} | {world_name}")
 
         elif choice == '2':
             plants = get_all_plants_sorted_by_name()
             # Header
             print_header(
-                f"{colour_text('Plant Name'.ljust(25), world_colours[12])} | "
-                f"{colour_text('Sun Cost'.center(9), COLOUR_GOLD)} | "
-                f"{colour_text('World'.ljust(20), COLOUR_GOLD)}"
+                f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
+                f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')} | "
+                f"{pad_and_color('World', 20, COLOUR_GOLD)}"
             )
             print("-" * 60)
             for name, cost, world_id in plants:
                 colour = world_colours.get(world_id, COLOUR_WHITE)
-                plant_name = colour_text(name.ljust(25), colour)
-                cost_str = colour_text(str(cost).center(9), COLOUR_GOLD)
-                world_name = colour_text(worlds.get(world_id, 'Unknown').ljust(20), colour)
+                plant_name = pad_and_color(name, 25, colour)
+                cost_str = pad_and_color(str(cost), 9, COLOUR_GOLD, 'center')
+                world_name = pad_and_color(worlds.get(world_id, 'Unknown'), 20, colour)
                 print(f"{plant_name} | {cost_str} | {world_name}")
 
         elif choice == '3' or choice == '4':
@@ -157,15 +173,15 @@ def main_sorting_menu():
                 print_header(
                     f"{colour_text(worlds[world_id] + ' Plants Sorted by ' + ('Sun Cost' if sort_by == 'Sun_Cost' else 'Name'), world_colours.get(world_id, COLOUR_WHITE))}"
                 )
-                # Header with plant name and sun cost columns
+                # Header
                 print(
-                    f"{colour_text('Plant Name'.ljust(25), world_colours[12])} | "
-                    f"{colour_text('Sun Cost'.center(9), COLOUR_GOLD)}"
+                    f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
+                    f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')}"
                 )
                 print("-" * 36)
                 for name, cost in plants:
-                    plant_name = colour_text(name.ljust(25), world_colours.get(world_id, COLOUR_WHITE))
-                    cost_str = colour_text(str(cost).center(9), COLOUR_GOLD)
+                    plant_name = pad_and_color(name, 25, world_colours.get(world_id, COLOUR_WHITE))
+                    cost_str = pad_and_color(str(cost), 9, COLOUR_GOLD, 'center')
                     print(f"{plant_name} | {cost_str}")
 
         elif choice == '5':
