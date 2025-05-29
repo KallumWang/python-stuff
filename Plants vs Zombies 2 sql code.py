@@ -7,21 +7,54 @@ worlds = {
     1: "Ancient Egypt", 2: "Pirate Seas", 3: "Wild West", 4: "Frostbite Caves", 5: "Lost City", 6: "Far Future", 
     7: "Dark Ages", 8: "Neon Mixtape Tour", 9: "Jurassic Marsh", 10: "Big Wave Beach", 11: "Modern Day", 12: "Player's House"
 }
-#all of the functions 
-#function for printing the title
+
+# ANSI escape sequences for 256 colours
+RESET = "\033[0m"
+BOLD = "\033[1m"
+
+# Colours
+COLOUR_GOLD = "\033[38;5;220m"
+COLOUR_DARK_BLUE = "\033[38;5;19m"
+COLOUR_LIGHT_BROWN = "\033[38;5;180m"
+COLOUR_PURPLE = "\033[38;5;93m"
+COLOUR_GREY = "\033[38;5;244m"
+COLOUR_LIGHT_BLUE = "\033[38;5;117m"
+COLOUR_DEEP_GREEN = "\033[38;5;28m"
+COLOUR_LIGHT_GREEN = "\033[38;5;120m"
+COLOUR_CYAN = "\033[36m"
+COLOUR_MAGENTA = "\033[35m"
+COLOUR_RED = "\033[31m"
+COLOUR_YELLOW = "\033[33m"
+COLOUR_GREEN = "\033[32m"
+COLOUR_WHITE = "\033[37m"
+
+world_colours = {
+    1: COLOUR_GOLD,
+    2: COLOUR_DARK_BLUE,
+    3: COLOUR_LIGHT_BROWN,
+    4: COLOUR_CYAN,
+    5: COLOUR_YELLOW,
+    6: COLOUR_PURPLE,
+    7: COLOUR_GREY,
+    8: COLOUR_MAGENTA,
+    9: COLOUR_CYAN,
+    10: COLOUR_LIGHT_BLUE,
+    11: COLOUR_DEEP_GREEN,
+    12: COLOUR_LIGHT_GREEN,
+}
+
+def colour_text(text, colour):
+    return f"{colour}{text}{RESET}"
+
 def print_header(title):
     print(f"\n{'=' * 10} {title} {'=' * 10}")
 
-
-#function for printing the glossary
 def print_world_glossary():
     print("World ID Glossary:")
     for id, name in worlds.items():
         print(f"{id:2} = {name}")
 
-
-#Functions to filter
-# Function that filters by suncost so cheapest goes firts by world
+# Database functions
 def get_plants_by_world(world_id, sort_by='Sun_Cost'):
     try:
         with sqlite3.connect(DATABASE) as db:
@@ -35,7 +68,7 @@ def get_plants_by_world(world_id, sort_by='Sun_Cost'):
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return []
-#Function to filter suncost for all plants
+
 def get_all_plants_sorted_by_suncost():
     try:
         with sqlite3.connect(DATABASE) as db:
@@ -46,7 +79,7 @@ def get_all_plants_sorted_by_suncost():
     except sqlite3.Error as e:
         print(f"Database error: {e}")
         return []
-#func that sorts all plants by name alphabetically
+
 def get_all_plants_sorted_by_name():
     try:
         with sqlite3.connect(DATABASE) as db:
@@ -58,53 +91,10 @@ def get_all_plants_sorted_by_name():
         print(f"Database error: {e}")
         return []
 
-
-# ANSI escape sequences for 256 colours
-RESET = "\033[0m"
-BOLD = "\033[1m"
-
-# 256-colour codes for requested colours
-COLOUR_GOLD = "\033[38;5;220m"         # Gold (Ancient Egypt)
-COLOUR_DARK_BLUE = "\033[38;5;19m"     # Dark Blue (Pirate Seas)
-COLOUR_LIGHT_BROWN = "\033[38;5;180m"  # Light Brown (Wild West)
-COLOUR_PURPLE = "\033[38;5;93m"        # Purple (Far Future)
-COLOUR_GREY = "\033[38;5;244m"         # Grey (Dark Ages)
-COLOUR_LIGHT_BLUE = "\033[38;5;117m"   # Light Blue (Big Wave Beach)
-COLOUR_DEEP_GREEN = "\033[38;5;28m"    # Dank Green Grass (Modern Day)
-COLOUR_LIGHT_GREEN = "\033[38;5;120m"  # Light Green (Player's House)
-
-# Other ANSI colours for fallback or other worlds
-COLOUR_CYAN = "\033[36m"   #Cyan (Frost Bite Caves)
-COLOUR_MAGENTA = "\033[35m" #Magenta (Neon mixtape tour)
-COLOUR_RED = "\033[31m"     #Red (Used for exit program colour)
-COLOUR_YELLOW = "\033[33m"  #Yellow (Lost city)
-COLOUR_GREEN = "\033[32m"   # green (used for options)
-COLOUR_WHITE = "\033[37m"   #White (Incase I need)
-
-# Map world IDs to their colour codes
-world_colours = {
-    1: COLOUR_GOLD,           # Ancient Egypt
-    2: COLOUR_DARK_BLUE,      # Pirate Seas
-    3: COLOUR_LIGHT_BROWN,    # Wild West
-    4: COLOUR_CYAN,           # Frostbite Caves (kept cyan as before)
-    5: COLOUR_YELLOW,         # Lost City (left yellow, you can change)
-    6: COLOUR_PURPLE,         # Far Future
-    7: COLOUR_GREY,           # Dark Ages
-    8: COLOUR_MAGENTA,        # Neon Mixtape Tour (left magenta)
-    9: COLOUR_CYAN,           # Jurassic Marsh (kept cyan)
-    10: COLOUR_LIGHT_BLUE,    # Big Wave Beach
-    11: COLOUR_DEEP_GREEN,    # Modern Day
-    12: COLOUR_LIGHT_GREEN,   # Player's House
-}
-
-def colour_text(text, colour):
-    return f"{colour}{text}{RESET}"
-
-#func that is the main sorting menu and asks for da stuff
+# Main menu function
 def main_sorting_menu():
     print_header("Plants vs Zombies 2 Database")
     print(f"\n{COLOUR_CYAN}This is a database for PvZ2 plants. Choose how you want to sort by:{RESET}")
-
 
     while True:
         print(f"\n{COLOUR_GOLD}Sort Plants By:{RESET}")
@@ -119,23 +109,26 @@ def main_sorting_menu():
         if choice == '1':
             plants = get_all_plants_sorted_by_suncost()
             print_header(colour_text("All Plants by Sun Cost", COLOUR_GOLD))
-            print("-" * 60)
+            print(f"{'Plant Name':<28} | {'Sun Cost':>8} | {'World':<20}")
+            print("-" * 65)
             for name, cost, world_id in plants:
                 colour = world_colours.get(world_id, COLOUR_WHITE)
-                coloured_plant_name = colour_text(name, colour)
-                print(f"{coloured_plant_name:<25} | {cost:>8} | {worlds.get(world_id, 'Unknown'):<20}")
+                padded_name = f"{name:<28}"
+                coloured_name = colour_text(padded_name, colour)
+                print(f"{coloured_name} | {cost:>8} | {worlds.get(world_id, 'Unknown'):<20}")
 
         elif choice == '2':
             plants = get_all_plants_sorted_by_name()
             print_header("All Plants by Name")
-            print(f"{'Plant Name':<25} | {'Sun Cost':>8} | {'World':<20}")
-            print("-" * 60)
+            print(f"{'Plant Name':<28} | {'Sun Cost':>8} | {'World':<20}")
+            print("-" * 65)
             for name, cost, world_id in plants:
                 colour = world_colours.get(world_id, COLOUR_WHITE)
-                coloured_plant_name = colour_text(name, colour)
-                print(f"{coloured_plant_name:<25} | {cost:>8} | {worlds.get(world_id, 'Unknown'):<20}")
+                padded_name = f"{name:<28}"
+                coloured_name = colour_text(padded_name, colour)
+                print(f"{coloured_name} | {cost:>8} | {worlds.get(world_id, 'Unknown'):<20}")
 
-        elif choice == '3' or choice == '4':
+        elif choice in ['3', '4']:
             print_world_glossary()
             try:
                 world_id = int(input("Enter World ID: "))
@@ -151,20 +144,19 @@ def main_sorting_menu():
                 print(f"No plants found in {worlds[world_id]}")
             else:
                 print_header(f"{worlds[world_id]} Plants Sorted by {'Sun Cost' if sort_by == 'Sun_Cost' else 'Name'}")
-                print(f"{'Plant Name':<25} | {'Sun Cost':>8}")
-                print("-" * 36)
+                print(f"{'Plant Name':<28} | {'Sun Cost':>8}")
+                print("-" * 40)
                 for name, cost in plants:
                     colour = world_colours.get(world_id, COLOUR_WHITE)
-                    coloured_plant_name = colour_text(name, colour)
-                    coloured_sun_cost = colour_text(str(cost), COLOUR_GOLD)
-                    print(f"{coloured_plant_name:<25} | {cost:>8}")
+                    padded_name = f"{name:<28}"
+                    coloured_name = colour_text(padded_name, colour)
+                    print(f"{coloured_name} | {cost:>8}")
 
         elif choice == '5':
             print("Exiting program")
             break
         else:
-            print("That's not a integer. Please select a number between 1 and 5. NO monkey business like decimals and stuff")
-
+            print("That's not an integer. Please select a number between 1 and 5. NO monkey business like decimals and stuff")
 
 if __name__ == "__main__":
     main_sorting_menu()
