@@ -121,6 +121,8 @@ def main_sorting_menu():
             print_header(colour_text("All Plants by Sun Cost", COLOUR_GOLD))
             print("-" * 60)
             for name, cost, world_id in plants:
+                colour = world_colours.get(world_id, COLOUR_WHITE)
+                coloured_plant_name = colour_text(name, colour)
                 print(f"{coloured_plant_name:<25} | {cost:>8} | {worlds.get(world_id, 'Unknown'):<20}")
 
         elif choice == '2':
@@ -129,6 +131,8 @@ def main_sorting_menu():
             print(f"{'Plant Name':<25} | {'Sun Cost':>8} | {'World':<20}")
             print("-" * 60)
             for name, cost, world_id in plants:
+                colour = world_colours.get(world_id, COLOUR_WHITE)
+                coloured_plant_name = colour_text(name, colour)
                 print(f"{coloured_plant_name:<25} | {cost:>8} | {worlds.get(world_id, 'Unknown'):<20}")
 
         elif choice == '3' or choice == '4':
