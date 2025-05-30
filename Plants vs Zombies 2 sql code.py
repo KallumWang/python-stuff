@@ -18,7 +18,7 @@ def print_world_glossary():
         print(f"{id:2} = {name}")
 
 # Database fetch functions
-def get_plants_by_world(world_id, sort_by='Sun_Cost'):
+def get_plants_by_world(world_id, sort_by='Sun_Cost'): #this one sorts by either sun cost or the plants name
     try:
         with sqlite3.connect(DATABASE) as db:
             cursor = db.cursor()
@@ -32,7 +32,7 @@ def get_plants_by_world(world_id, sort_by='Sun_Cost'):
         print(f"Database error: {e}")
         return []
 
-def get_all_plants_sorted_by_suncost():
+def get_all_plants_sorted_by_suncost(): #This function sorts plants by sun cost
     try:
         with sqlite3.connect(DATABASE) as db:
             cursor = db.cursor()
@@ -43,7 +43,7 @@ def get_all_plants_sorted_by_suncost():
         print(f"Database error: {e}")
         return []
 
-def get_all_plants_sorted_by_name():
+def get_all_plants_sorted_by_name(): #this one sorts only by name
     try:
         with sqlite3.connect(DATABASE) as db:
             cursor = db.cursor()
@@ -54,7 +54,7 @@ def get_all_plants_sorted_by_name():
         print(f"Database error: {e}")
         return []
 
-# ANSI color codes
+# ANSI color codes These colours are for the coloured text
 RESET = "\033[0m"
 BOLD = "\033[1m"
 
@@ -91,7 +91,7 @@ world_colours = {
 def colour_text(text, colour):
     return f"{colour}{text}{RESET}"
 
-def pad_and_color(text, width, colour, align='left'):
+def pad_and_color(text, width, colour, align='left'): #this alligns everything
     if len(text) > width:
         text = text[:width - 3] + '...'
     if align == 'left':
@@ -104,7 +104,7 @@ def pad_and_color(text, width, colour, align='left'):
         padded = text
     return colour_text(padded, colour)
 
-def main_sorting_menu():
+def main_sorting_menu(): #Main sorting menu also prints out a message basically a welcome and explains what the database is and what you want to sort by
     print_header("Plants vs Zombies 2 Database")
     print(f"\n{COLOUR_CYAN}This is a database for PvZ2 plants. Choose how you want to sort by:{RESET}")
 
@@ -118,29 +118,29 @@ def main_sorting_menu():
 
         choice = input(f"{BOLD}Enter your choice (1-5): {RESET}")
 
-        if choice == '1':
+        if choice == '1': #Choice 1 calls the function where you sort by the suncost
             plants = get_all_plants_sorted_by_suncost()
             print_header(
                 f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
                 f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')} | "
                 f"{pad_and_color('World', 20, COLOUR_GOLD)}"
             )
-            print("-" * 60)
-            for name, cost, world_id in plants:
+            print("-" * 60)     #this bit is the printing to make it look nicer and add colour also adds lines and stuff
+            for name, cost, world_id in plants: 
                 colour = world_colours.get(world_id, COLOUR_WHITE)
                 plant_name = pad_and_color(name, 25, colour)
                 cost_str = pad_and_color(str(cost), 9, COLOUR_GOLD, 'center')
                 world_name = pad_and_color(worlds.get(world_id, 'Unknown'), 20, colour)
                 print(f"{plant_name} | {cost_str} | {world_name}")
 
-        elif choice == '2':
+        elif choice == '2': #Choice 2 calls the earlier function and sortbs by names alphabetically
             plants = get_all_plants_sorted_by_name()
             print_header(
                 f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
                 f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')} | "
                 f"{pad_and_color('World', 20, COLOUR_GOLD)}"
             )
-            print("-" * 60)
+            print("-" * 60) #same as choice 1 it makeas it look nicer
             for name, cost, world_id in plants:
                 colour = world_colours.get(world_id, COLOUR_WHITE)
                 plant_name = pad_and_color(name, 25, colour)
@@ -148,29 +148,29 @@ def main_sorting_menu():
                 world_name = pad_and_color(worlds.get(world_id, 'Unknown'), 20, colour)
                 print(f"{plant_name} | {cost_str} | {world_name}")
 
-        elif choice in ('3', '4'):
+        elif choice in ('3', '4'): #If the user puts either "3" or "4" it prints the world glosssary and then depending on whether they used 3 or 4 it will call a different function
             while True:
-                print_world_glossary()
+                print_world_glossary() #This accepts error so if they do not put a interger from the glossary it will ask again or if they misclick and want to go back they can type b
                 user_input = input("Enter World ID (or 'b' to go back): ").strip()
                 if user_input.lower() == 'b':
                     break
                 try:
                     world_id = int(user_input)
                     if world_id not in worlds:
-                        print("Invalid World ID. Please select a valid number from the glossary.")
+                        print("WRONG can you even read the glossary try again NO MONKEY BUSINESS Please enter a valid whole number from the glossary.")
                         continue
                     break
                 except ValueError:
-                    print("Invalid input. Please enter a valid whole number from the glossary.")
+                    print("WRONG can you even read the glossary try again NO MONKEY BUSINESS Please enter a valid whole number from the glossary.")
                     continue
 
             if user_input.lower() == 'b':
                 continue
 
-            sort_by = 'Sun_Cost' if choice == '3' else 'Plant_Name'
+            sort_by = 'Sun_Cost' if choice == '3' else 'Plant_Name' #this bit will be the after math after deciding wether the user has put 3 or 4 in and decides on which function to use
             plants = get_plants_by_world(world_id, sort_by)
             if not plants:
-                print(f"No plants found in {worlds[world_id]}")
+                print(f"No plants found in {worlds[world_id]}") #Here just in case database breaks and the worlds lose all their plants and say no plants found in
             else:
                 print_header(
                     f"{colour_text(worlds[world_id] + ' Plants Sorted by ' + ('Sun Cost' if sort_by == 'Sun_Cost' else 'Name'), world_colours.get(world_id, COLOUR_WHITE))}"
@@ -179,14 +179,14 @@ def main_sorting_menu():
                     f"{pad_and_color('Plant Name', 25, world_colours[12])} | "
                     f"{pad_and_color('Sun Cost', 9, COLOUR_GOLD, 'center')}"
                 )
-                print("-" * 36)
+                print("-" * 36) #This is same as 1 & 2 just here to prit prettier
                 for name, cost in plants:
                     plant_name = pad_and_color(name, 25, world_colours.get(world_id, COLOUR_WHITE))
                     cost_str = pad_and_color(str(cost), 9, COLOUR_GOLD, 'center')
                     print(f"{plant_name} | {cost_str}")
 
         elif choice == '5':
-            print("Exiting program")
+            print("Exiting program") #exzits program
             break
         else:
             print("That's not a number from 1 - 5. Please select a number between 1 and 5. NO monkey business like decimals and stuff.")
